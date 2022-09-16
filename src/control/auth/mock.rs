@@ -45,7 +45,11 @@ impl ControlPlaneAuth for MockAuth {
         Some("mock_auth".to_string())
     }
 
-    async fn get_authorized_keychains(&self, _username: &str) -> Result<Vec<String>> {
+    async fn get_authorized_keychains<T: KeyhouseImpl + 'static>(
+        &self,
+        _store: Option<OwnedStore<T>>,
+        _username: &str,
+    ) -> Result<Vec<String>> {
         Ok(self.keychain_aliases.read().await.clone())
     }
 

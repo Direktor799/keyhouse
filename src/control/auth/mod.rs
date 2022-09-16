@@ -1,5 +1,5 @@
 mod mock;
-use crate::prelude::*;
+use crate::{prelude::*, store::OwnedStore};
 pub use mock::MockAuth;
 use std::sync::Arc;
 
@@ -31,7 +31,11 @@ pub trait ControlPlaneAuth: Send + Sync + 'static {
     async fn authorize_users(&self, alias: String, usernames: Vec<String>) -> Result<()>;
 
     /// returns aliases of authorized keychains
-    async fn get_authorized_keychains(&self, username: &str) -> Result<Vec<String>>;
+    async fn get_authorized_keychains<T: KeyhouseImpl + 'static>(
+        &self,
+        store: Option<OwnedStore<T>>,
+        username: &str,
+    ) -> Result<Vec<String>>;
 
     async fn create_keychain(&self, alias: String, owner: &str, level: &str) -> Result<()>;
 

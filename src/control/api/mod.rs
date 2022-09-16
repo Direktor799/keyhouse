@@ -51,7 +51,7 @@ impl<Y: KeyhouseImpl + 'static> ControlData<Y> {
         identity: &Identity,
     ) -> PlatformDataResult<Vec<String>, T> {
         self.auth
-            .get_authorized_keychains(&*identity.username)
+            .get_authorized_keychains(Some(self.store.clone()), &*identity.username)
             .await
             .map_err(|_| PlatformResponse::auth_error("unauthorized due to auth error", 3, None))
     }
